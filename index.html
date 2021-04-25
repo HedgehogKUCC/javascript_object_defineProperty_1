@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>操作資料才是王道 1</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/02-8.css">
+</head>
+<body>
+    <div id="app">
+        <a class="menuBtn"><i class="fas fa-bars fa-3x"></i></a>
+        <div class="content">
+            <img src="./images/logo2.png" alt="">
+        </div>
+
+        <div class="menu ">
+            <a class="closeBtn"><i class="fas fa-times fa-3x"></i></a>
+            <ul class="nav">
+                <li><a>abous</a></li>
+                <li><a>content</a></li>
+                <li><a>user</a></li>
+                <li><a>address</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var menu = document.getElementsByClassName('menu')[0];
+        var menuBtn = document.getElementsByClassName('menuBtn')[0];
+        var closeBtn = document.getElementsByClassName('closeBtn')[0];
+
+        // 事件( click, ...etc ) 操作資料
+        // 讓 Object.defineProperty 去操作 DOM
+        var operateDOM_data = {
+            // 雖然 Object.defineProperty 會重新設定值為 undefined
+            // 但為了維護方便這邊還是可以先寫出來，讓我們知道初始值 !!!
+            isMenuOpen: false
+        };
+
+        // Object.defineProperty < IE8 不支援 > : 監控 Object 的變化
+        // 使用 Object.defineProperty 的 Object 裡面的 key value 會重新設定
+        Object.defineProperty(operateDOM_data, 'isMenuOpen', {
+            get: function() {
+                // console.log('get');
+                return isMenuOpen;
+            },
+            set: function(val) {
+                // console.log('set value : ',val);
+                isMenuOpen = val;
+                menuToggleClass(val);
+            }
+        });
+
+        // Object.defineProperty 會將 key value 重新設定
+        // 所以這邊要重新設定 key value，會觸發 set
+        operateDOM_data.isMenuOpen = false;
+
+        // 如果沒有設定 operateDOM_data.isMenuOpen = false; 會出現 ReferenceError: isMenuOpen is not defined
+        // console.log(operateDOM_data.isMenuOpen); 會觸發 get
+
+        menuBtn.addEventListener('click', function(){
+            operateDOM_data.isMenuOpen = true;
+            // menu.classList.add('open');
+        })
+        closeBtn.addEventListener('click', function(){
+            operateDOM_data.isMenuOpen = false;
+            // menu.classList.remove('open');
+        })
+
+        function menuToggleClass(val) {
+            if (val) {
+                menu.classList.add('open');
+            } else {
+                menu.classList.remove('open');
+            }
+        }
+
+        // 資料 和 DOM 綁在一起
+        // menuBtn.addEventListener('click', function(){
+        //     menu.classList.add('open');
+        // })
+        // closeBtn.addEventListener('click', function(){
+        //     menu.classList.remove('open');
+        // })
+    </script>
+</body>
+</html>
